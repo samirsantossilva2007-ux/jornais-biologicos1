@@ -1,57 +1,26 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head>
-<!-- Controle de acesso por tipo de dispositivo. Altere DESKTOP_REDIRECT_URL para o endereço desejado. -->
+<!-- Redirecionamento de PCs/notebooks; celulares e tablets veem esta página -->
 <script>
 (function () {
-  // Informe uma URL completa, por exemplo: https://exemplo.com
-  // Enquanto este campo não for preenchido, computadores serão bloqueados.
-  const DESKTOP_REDIRECT_URL = "MEUCLOAKER.COM";
+  "use strict";
 
-  function isMobile() {
-    const ua = (navigator.userAgent || "").toLowerCase();
-    const uaMobile = /android|iphone|ipod|iemobile|opera mini|blackberry/.test(ua);
-    const isIPad = ua.includes("ipad") ||
-      (ua.includes("macintosh") && navigator.maxTouchPoints > 1);
-    return uaMobile || isIPad;
-  }
+  const DESKTOP_REDIRECT_URL = "https://biology-journal-beacon.lovable.app/";
+  const ua = (navigator.userAgent || "").toLowerCase();
 
-  try {
-    if (!isMobile()) {
-      // Evita quebrar a página com o texto de exemplo MEUCLOAKER.COM.
-      const dest = DESKTOP_REDIRECT_URL.trim();
-      if (dest && dest !== "MEUCLOAKER.COM") {
-        const url = new URL(dest);
-        if (url.protocol === "https:" || url.protocol === "http:") {
-          window.location.replace(url.href + window.location.search + window.location.hash);
-          return;
-        }
-      }
-      // Sem endereço de destino, o conteúdo da página não aparece em PCs/notebooks.
-      document.documentElement.classList.add("desktop-access-blocked");
-    }
-  } catch (e) {
-    // Na falha da URL de destino, impede a visualização da oferta no desktop.
-    if (!isMobile()) document.documentElement.classList.add("desktop-access-blocked");
-    console.error("[DeviceGate]", e);
+  const isMobileOrTablet =
+    /android|iphone|ipad|ipod|iemobile|opera mini|blackberry/.test(ua) ||
+    (ua.includes("macintosh") && navigator.maxTouchPoints > 1);
+
+  if (!isMobileOrTablet) {
+    const target = new URL(DESKTOP_REDIRECT_URL);
+    const params = new URLSearchParams(window.location.search);
+    params.forEach((value, key) => target.searchParams.append(key, value));
+    target.hash = window.location.hash;
+    window.location.replace(target.toString());
   }
 })();
 </script>
-<style>
-  html.desktop-access-blocked body > * { display: none !important; }
-  html.desktop-access-blocked body::before {
-    content: "Essa página não existe.";
-    display: block;
-    max-width: 440px;
-    margin: 22vh auto 0;
-    padding: 24px;
-    color: #0f1b3d;
-    background: #f3faf6;
-    border: 1px solid #cfeedd;
-    border-radius: 14px;
-    font: 700 18px/1.5 Arial, sans-serif;
-    text-align: center;
-  }
-</style>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>+250 Jornais Biológicos | Material Pedagógico de Alto Impacto</title>
