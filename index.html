@@ -1,30 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-BR"><head>
-<!-- Redirecionamento real para URL diferente no desktop. -->
+<!-- Desktop: URL própria e tela 404; mobile: página original. -->
 <script>
 (function () {
-  // Destino exclusivo do computador. Este caminho NÃO deve existir no site.
-  // Se quiser OUTRO DOMÍNIO, substitua por "https://seu-outro-dominio.com/pagina-inexistente".
-  const DESKTOP_REDIRECT_URL = "/erro-404-pc-jornais-biologicos-7c92e4";
-
   function isMobile() {
-    const ua = (navigator.userAgent || "").toLowerCase();
-    const uaMobile = /android|iphone|ipod|iemobile|opera mini|blackberry/.test(ua);
-    const isIPad = ua.includes("ipad") ||
-      (ua.includes("macintosh") && navigator.maxTouchPoints > 1);
-    return uaMobile || isIPad;
+    var ua = (navigator.userAgent || '').toLowerCase();
+    return /android|iphone|ipod|iemobile|opera mini|blackberry/.test(ua) ||
+      ua.indexOf('ipad') !== -1 ||
+      (ua.indexOf('macintosh') !== -1 && navigator.maxTouchPoints > 1);
   }
 
-  try {
-    if (!isMobile()) {
-      const target = new URL(DESKTOP_REDIRECT_URL, window.location.href);
-      // Preserva UTMs e âncora ao mudar de URL.
-      target.search = window.location.search;
-      target.hash = window.location.hash;
-      window.location.replace(target.href);
-    }
-  } catch (e) {
-    console.error("[RedirectGate] erro:", e);
+  if (isMobile()) return;
+
+  // Esconde a página comercial antes de exibir a tela de erro no PC.
+  document.documentElement.style.visibility = 'hidden';
+
+  function mostrar404() {
+    var caminho404 = '/erro-404-pagina-nao-encontrada';
+    try {
+      var destino = caminho404 + (location.search || '') + (location.hash || '');
+      history.replaceState(null, '', destino);
+    } catch (e) { console.error('Falha ao alterar URL:', e); }
+
+    document.head.innerHTML = '<meta charset="utf-8">' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+      '<meta name="robots" content="noindex,nofollow">' +
+      '<title>404 - Página não encontrada</title>' +
+      '<style>*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#222}' +
+      'body{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}' +
+      'h1{margin:0 0 16px;font-size:clamp(90px,18vw,150px);line-height:1}p{margin:0;font-size:clamp(17px,3vw,24px)}</style>';
+    document.body.innerHTML = '<main><h1>404</h1><p>Essa página não foi encontrada.</p></main>';
+    document.documentElement.style.visibility = 'visible';
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mostrar404, {once:true});
+  } else {
+    mostrar404();
   }
 })();
 </script>
